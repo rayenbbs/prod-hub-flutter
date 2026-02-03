@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:flutter/services.dart';
+import 'dart:async;
 
 // Habit model
 class Habit {
@@ -236,6 +237,7 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen>
   }
 
   void _incrementHabit(int index) {
+    HapticFeedback.lightImpact();
     setState(() {
       final habit = _habits[index];
       if (habit.currentProgress < habit.dailyGoal) {
@@ -261,6 +263,7 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen>
   }
 
   void _decrementHabit(int index) {
+    HapticFeedback.selectionClick();
     setState(() {
       final habit = _habits[index];
       if (habit.currentProgress > 0) {
@@ -644,9 +647,39 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen>
   }
 
   void _deleteHabit(int index) {
-    setState(() {
-      _habits.removeAt(index);
-    });
+    final habit = _habits[index];
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Habit?'),
+        content: Text('Are you sure you want to delete "${habit.name}"? This will reset your ${habit.streak} day streak.'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() => _habits.removeAt(index));
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('"${habit.name}" deleted'),
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -752,22 +785,35 @@ class _HabitTrackerScreenState extends State<HabitTrackerScreen>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                'Habit Tracker',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+              IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back_ios_rounded),
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.all(8),
+                ),
               ),
+              const SizedBox(width: 8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Habit Tracker',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                  ),
               Text(
                 '${_totalCompletedToday}/${_habits.length} habits completed today',
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: 14,
                 ),
+              ),
+                ],
               ),
             ],
           ),
