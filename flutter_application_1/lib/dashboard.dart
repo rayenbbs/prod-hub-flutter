@@ -66,12 +66,10 @@ class DashboardScreen extends StatelessWidget {
                         onTap: () => Navigator.pushNamed(context, '/habits'),
                       ),
                       _DashboardCard(
-                        title: 'Focus Timer',
-                        icon: Icons.timer_outlined,
-                        color: Colors.blue,
-                        onTap: () {
-                          // Placeholder for future feature
-                        },
+                        title: 'Quote Generator',
+                        icon: Icons.format_quote_rounded,
+                        color: Colors.purple,
+                        onTap: () => Navigator.pushNamed(context, '/quotes'),
                       ),
                       _DashboardCard(
                         title: 'Analytics',
