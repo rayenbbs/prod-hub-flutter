@@ -60,6 +60,12 @@ class DashboardScreen extends StatelessWidget {
                         onTap: () => Navigator.pushNamed(context, '/todo'),
                       ),
                       _DashboardCard(
+                        title: 'Habit Tracker',
+                        icon: Icons.track_changes_rounded,
+                        color: Colors.green,
+                        onTap: () => Navigator.pushNamed(context, '/habits'),
+                      ),
+                      _DashboardCard(
                         title: 'Focus Timer',
                         icon: Icons.timer_outlined,
                         color: Colors.blue,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'todo_list.dart';
 import 'dashboard.dart';
+import 'habit_tracker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           ),
           body: const TodoList(),
         ),
+        '/habits': (context) => const HabitTrackerScreen(),
       },
     );
   }
